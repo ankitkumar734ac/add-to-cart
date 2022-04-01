@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="mystyle.css">
+</head>
+<body>
+<h3>List Of Product</h3>
+<div id='data'></div>
+<h3>My Cart</h3>
+<p id='p'></p>
+<div id='myCart'></div>
+<script type="">
+	let product=
+	[{prod:'Pepsi',price:15,stock:20},
+	{prod:'Coke',price:18,stock:30},
+	{prod:'Maggi',price:10,stock:35},
+	{prod:'Nescafe',price:40,stock:10},
+	{prod:'Dairy Milk',price:30,stock:12},
+	{prod:'Frito Lays',price:20,stock:15}];
+	//console.log(product);
+
+	let myProduct=[];
+	function showMyCart(){
+		let ele=document.getElementById('myCart');
+		let ele1=document.getElementById('p');
+		if(myProduct.length==0){
+			ele1.innerHTML='';
+			ele.innerHTML='Cart is Empty';
+		}
+
+		else{
+			//console.log(myProduct);
+			let tProd=myProduct.reduce(function(acc,curr){
+				return acc+=curr.quantity;
+			},0);
+			let tAmount=myProduct.reduce(function(acc,curr){
+				return acc+=curr.amount;
+			},0);
+			ele1.innerHTML='Number of items : '+tProd+' Bill Amount : '+tAmount;
+			let arr=myProduct.map(function(pro){
+				let data='<tr><td>'+pro.prod+'</td>';
+				data+='<td>'+pro.quantity+'</td>';
+				data+='<td>'+pro.price+'</td>';
+				data+='<td>'+pro.amount+'</td>';
+				data+='<td><button class="rem" onclick="remove(\''+pro.prod+'\')">Remove From Cart</button></td></tr>';
+				return data;
+			});
+			ele.innerHTML='<table><tr class="heading"><th>Product</th><th>Quantity</th><th>Price</th><th>Amount</th><th></th></tr>'+arr.join('')+'</table>';
+
+		}
+	}
+	function remove(name){
+		console.log(name);
+		let ind=myProduct.findIndex(function(pro){
+			return pro.name=name;
+		});
+		console.log(myProduct);
+		myProduct.splice(ind,ind+1);
+		console.log(myProduct);
+		showMyCart();
+	}
+	showMyCart();
+	function addToCart(name){
+		let json={};
+		let ind=myProduct.findIndex(function(pr){
+			return pr.prod==name;
+		});
+		let index=product.findIndex(function(pr){
+				return pr.prod==name;
+			});
+		if(ind==-1){
+			//console.log('kjgxjgascjask');
+			json['prod']=product[index].prod;
+			json['quantity']=1;
+			json['price']=product[index].price;
+			json['amount']=product[index].price;
+			myProduct.push(json);
+		}else{
+			myProduct[ind].quantity=myProduct[ind].quantity+1;
+			myProduct[ind].price=product[index].price;
+			myProduct[ind].amount=myProduct[ind].quantity*product[index].price;
+		}
+		
+		showMyCart();
+		//console.log('jason',json);
+		
+	}
+	function show(){
+		let arr=product.map(function(pro){
+			let data='<tr><td>'+pro.prod+'</td>';
+			data+='<td>'+pro.price+'</td>';
+			data+='<td>'+pro.stock+'</td>';
+			data+='<td><button class="add" onclick="addToCart(\''+pro.prod+'\')">Add To Cart</button></td></tr>'
+			return data;
+		});
+		let ele=document.getElementById('data');
+		ele.innerHTML='<table><tr class="heading"><th>Prod</th><th>Price</th><th>Stock</th><th></th></tr>'+arr.join('')+'</table>';
+	}
+	show();
+</script>
+</body>
+</html>
